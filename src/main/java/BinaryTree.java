@@ -1,5 +1,6 @@
+
 public class BinaryTree implements Interfaces.BinaryTree {
-    
+
     private Node root;
 
     private class Node implements Comparable<Integer> {
@@ -11,6 +12,7 @@ public class BinaryTree implements Interfaces.BinaryTree {
             this.value = value;
         }
 
+        @Override
         public int compareTo(Integer param) {
             if (value > param) return -1;
             else if (value < param) return 1;
@@ -18,8 +20,10 @@ public class BinaryTree implements Interfaces.BinaryTree {
         }
     }
 
-    public void add(Integer value) {
+    @Override
+    public boolean add(Integer value) {
         root = add(root, value);
+        return root != null;
     }
 
     private Node add(Node node, Integer value) {
@@ -27,32 +31,46 @@ public class BinaryTree implements Interfaces.BinaryTree {
             return new Node(value);
         }
 
-        if (node.compareTo(value) == 1) {
-            node.right = add(node.right, value);
-        } else if (node.compareTo(value) == -1) {
-            node.left = add(node.left, value);
-        } else {
-            return node;
+        switch (node.compareTo(value)) {
+            case 1:
+                node.right = add(node.right, value);
+                break;
+            case -1:
+                node.left = add(node.left, value);
+                break;
+            default:
+                return node;
         }
         return node;
     }
 
-    public void delete(Integer value) {
+    /**
+     *
+     * @param value
+     * @return
+     */
+    @Override
+    public boolean delete(Integer value) {
         try {
             root = delete(root, value);
+            return true;
         } catch (NullPointerException e) {
-            System.out.println("Попытка удаления в пустом дереве ничего не даст :(");
+            return false;
         }
 
     }
 
     private Node delete(Node node, Integer value) {
-        if (node.compareTo(value) == 1) {
-            node.right = delete(node.right, value);
-        } else if (node.compareTo(value) == -1) {
-            node.left = delete(node.left, value);
-        } else {
-            node = checkSituation(node);
+        switch (node.compareTo(value)) {
+            case 1:
+                node.right = delete(node.right, value);
+                break;
+            case -1:
+                node.left = delete(node.left, value);
+                break;
+            default:
+                node = checkSituation(node);
+                break;
         }
         return node;
     }
@@ -96,6 +114,12 @@ public class BinaryTree implements Interfaces.BinaryTree {
         return node;
     }
 
+    /**
+     *
+     * @param value
+     * @return
+     */
+    @Override
     public boolean search(Integer value) {
         return search(root, value);
     }
@@ -105,66 +129,93 @@ public class BinaryTree implements Interfaces.BinaryTree {
             return false;
         }
 
-        if (node.compareTo(value) == 1) {
-            return search(node.right, value);
-        } else if (node.compareTo(value) == -1) {
-            return search(node.left, value);
+        switch (node.compareTo(value)) {
+            case 1:
+                return search(node.right, value);
+            case -1:
+                return search(node.left, value);
+            default:
+                return true;
+        }
+    }
+
+    public Integer getFather(Integer value){
+        if (getFather(root, value) != null) {
+            return getFather(root, value).value;
         } else {
-            return true;
+            return null;
+        }
+    }
+    
+    public Integer getLeftChild(Integer value){
+        if (getLeftChild(root, value) != null){
+            return getLeftChild(root, value).value;
+        } else {
+            return null;
+        }
+    }
+    
+    public Integer getRightChild(Integer value) {
+        if (getRightChild(root, value) != null){
+            return getRightChild(root, value).value;
+        } else {
+            return null;
         }
     }
 
-    @Override
-    public void draw() {
-        draw(root);
-    }
-
-    private void draw(Node node) {
-        /*- Буду искать в глубину.
-         *- Но ты можешь искать в ширину, смотреть по слоям удобнее!
-         *- Хочу искать в глубину.*/
-        if (node != null) {
-            System.out.print(" " + node.value);
-            draw(node.left);
-            draw(node.right);
+    private Node getFather(Node node, Integer value){
+        Node returned = null;
+        if (root.compareTo(value) == 0 || node == null) {
+            return null;
         }
-    }
-
-    @Override
-    public String[] getNodeAroundCurrent(Integer value) {
-        return getNodeAroundCurrent(root, value);
-    }
-
-    private String[] getNodeAroundCurrent(Node node, Integer value) {
-        String[] str = new String[3];
-        for (int i = 0; i < 3; i++) {
-            str[i] = "";
+        
+        if (node.compareTo(value) > 0 && !node.right.value.equals(value)) {
+            returned = getFather(node.right, value);
+        } else if (node.compareTo(value) < 0 && !node.left.value.equals(value)) {
+            returned = getFather(node.left, value);
+        } else if (node.left.value.equals(value) || node.right.value.equals(value)) {
+            returned = node;
         }
+        return returned;
+    }
+
+    private Node getLeftChild(Node node, Integer value){
+        Node returned = null;
         if (node == null) {
-            return str;
+            return null;
         }
 
-        if (node.compareTo(value) == 1 && !node.right.value.equals(value)) {
-            getNodeAroundCurrent(node.right, value);
-        } else if (node.compareTo(value) == -1 && !node.left.value.equals(value)) {
-            getNodeAroundCurrent(node.left, value);
-        } else if (node.left.value.equals(value)) {
-            str[0] = node.value.toString();
-            if (node.left.left != null) {
-                str[1] = node.left.left.value.toString();
-            }
-            if (node.left.right != null) {
-                str[2] = node.left.right.value.toString();
-            }
-        } else if (node.right.value.equals(value)) {
-            str[0] = node.value.toString();
-            if (node.right.left != null) {
-                str[1] = node.right.left.value.toString();
-            }
-            if (node.right.right != null) {
-                str[2] = node.right.right.value.toString();
-            }
+        switch (node.compareTo(value)) {
+            case 1:
+                returned = getLeftChild(node.right, value);
+                break;
+            case -1:
+                returned = getLeftChild(node.left, value);
+                break;
+            default:
+                returned = node.left;
+                break;
         }
-        return str;
+        return returned;
+    }
+    
+    private Node getRightChild(Node node, Integer value){
+        Node returned = null;
+        if (root.compareTo(value) == 0 || node == null) {
+            return null;
+        }
+        
+        switch (node.compareTo(value)) {
+            case 1:
+                returned = getRightChild(node.right, value);
+                break;
+            case -1:
+                returned = getRightChild(node.left, value);
+                break;
+            default:
+                returned = node.right;
+                break;
+        }
+        return returned;
     }
 }
