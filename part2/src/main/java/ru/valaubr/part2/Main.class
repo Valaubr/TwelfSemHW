@@ -1,0 +1,58 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ru.valaubr.part2;
+
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+
+/**
+ *
+ * @author valaubr
+ */
+public class Main {
+
+    
+    @Option(name = "-c", aliases = { "--encrypt" }, required = true, usage = "You wanna encrypt?")
+    public String encryption;
+    @Option(name = "-d", aliases = { "--decrypt" }, required = true, usage = "You wanna decrypt?")
+    public String decryption;
+    @Option(name = "-o", usage = "Just give me a name!")
+    public String outputName;
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        new Main().doMain(args);
+    }
+
+    private void doMain(String[] args) {
+        CmdLineParser parser = new CmdLineParser(this);
+
+        try {
+            parser.parseArgument(args);
+            this.run();
+        } catch (CmdLineException e) {
+            System.err.println(e.getMessage());
+            parser.printUsage(System.err);
+        }
+    }
+
+    private void run() {
+
+        System.out.println("- encryption: " + encryption);
+        System.out.println("- decryption: " + decryption);
+
+        if (encryption.equalsIgnoreCase("richard")) {
+            System.out.println("Hello Richard!");
+        } else if (encryption.equalsIgnoreCase("anne")) {
+            System.out.println("Hello Anne");
+        } else {
+            System.out.println("Unknown name");
+        }
+    }
+}
