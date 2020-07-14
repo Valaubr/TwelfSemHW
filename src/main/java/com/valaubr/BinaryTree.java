@@ -1,6 +1,7 @@
 package com.valaubr;
 
 import com.valaubr.interfaces.InterfaceOfBinaryTree;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -8,7 +9,10 @@ public class BinaryTree implements InterfaceOfBinaryTree {
 
     private Node root;
 
+    private Node deleteChecker = new Node(null);
+
     private static class Node implements Comparable<Integer> {
+        @NotNull
         private Integer value;
         private Node left;
         private Node right;
@@ -66,15 +70,14 @@ public class BinaryTree implements InterfaceOfBinaryTree {
 
     @Override
     public boolean delete(Integer value) {
-        if (search(value)) {
-            delete(root, value);
-            return true;
-        } else {
-            return false;
-        }
+        return delete(root, value) != deleteChecker;
     }
 
     private Node delete(Node node, Integer value) {
+        if (node == null) {
+            return deleteChecker; // Кастыль... С другой стороны, таким образом мы можем отслеживать
+            // есть ли элемент в дереве и сообщать об этом той стороне.
+        }
         switch (node.compareTo(value)) {
             case 1:
                 return node.right = delete(node.right, value);
@@ -123,12 +126,13 @@ public class BinaryTree implements InterfaceOfBinaryTree {
 
     @Override
     public boolean search(Integer value) {
-        return search(root, value);
+        Node result = search(root, value);
+        return result != null;
     }
 
-    private boolean search(Node node, Integer value) {
+    private Node search(Node node, Integer value) {
         if (node == null) {
-            return false;
+            return null;
         }
 
         switch (node.compareTo(value)) {
@@ -137,7 +141,7 @@ public class BinaryTree implements InterfaceOfBinaryTree {
             case -1:
                 return search(node.left, value);
             default:
-                return true;
+                return node;
         }
     }
 
@@ -173,42 +177,16 @@ public class BinaryTree implements InterfaceOfBinaryTree {
     }
 
     private Node getLeftChild(Node node, Integer value) {
-        Node returned;
         if (node == null) {
             return null;
         }
-
-        switch (node.compareTo(value)) {
-            case 1:
-                returned = getLeftChild(node.right, value);
-                break;
-            case -1:
-                returned = getLeftChild(node.left, value);
-                break;
-            default:
-                returned = node.left;
-                break;
-        }
-        return returned;
+        return search(node, value).left;
     }
 
     private Node getRightChild(Node node, Integer value) {
-        Node returned;
         if (node == null) {
             return null;
         }
-
-        switch (node.compareTo(value)) {
-            case 1:
-                returned = getRightChild(node.right, value);
-                break;
-            case -1:
-                returned = getRightChild(node.left, value);
-                break;
-            default:
-                returned = node.right;
-                break;
-        }
-        return returned;
+        return search(node, value).right;
     }
 }

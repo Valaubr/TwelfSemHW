@@ -9,17 +9,18 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class BinaryTreeTest {
     /**
-     * Test of add method, of class com.valaubr.InterfaceOfBinaryTree.
+     * Test of add method, of class InterfaceOfBinaryTree.
      */
     @Test
     void testAdd() {
         System.out.println("add");
         BinaryTree instance = createBinaryTree();
         assertTrue(instance.add(Integer.MIN_VALUE));
+        assertThrows(NullPointerException.class, () -> instance.add(null));
     }
 
     /**
-     * Test of delete method, of class com.valaubr.InterfaceOfBinaryTree.
+     * Test of delete method, of class InterfaceOfBinaryTree.
      */
     @Test
     void testDelete() {
@@ -28,8 +29,9 @@ class BinaryTreeTest {
         instance.add(2);
         instance.add(8);
         instance.add(45);
-        
+
         assertTrue(instance.delete(2));
+        assertFalse(instance.delete(2));
         assertTrue(instance.delete(8));
         assertTrue(instance.delete(45));
         assertFalse(instance.delete(49));
@@ -37,7 +39,7 @@ class BinaryTreeTest {
     }
 
     /**
-     * Test of search method, of class com.valaubr.InterfaceOfBinaryTree.
+     * Test of search method, of class InterfaceOfBinaryTree.
      */
     @Test
     void testSearch() {
@@ -48,7 +50,7 @@ class BinaryTreeTest {
     }
 
     /**
-     * Test of getFather method, of class com.valaubr.InterfaceOfBinaryTree.
+     * Test of getFather method, of class InterfaceOfBinaryTree.
      */
     @Test
     void testGetFather() {
@@ -59,7 +61,7 @@ class BinaryTreeTest {
     }
 
     /**
-     * Test of getLeftChild method, of class com.valaubr.InterfaceOfBinaryTree.
+     * Test of getLeftChild method, of class InterfaceOfBinaryTree.
      */
     @Test
     void testGetLeftChild() {
@@ -74,7 +76,7 @@ class BinaryTreeTest {
     }
 
     /**
-     * Test of getRightChild method, of class com.valaubr.InterfaceOfBinaryTree.
+     * Test of getRightChild method, of class InterfaceOfBinaryTree.
      */
     @Test
     void testGetRightChild() {
