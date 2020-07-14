@@ -1,7 +1,5 @@
 package com.valaubr.interfaces;
 
-import org.jetbrains.annotations.NotNull;
-
 public interface InterfaceOfBinaryTree {
     /**
      * add new value in node or find collision.
