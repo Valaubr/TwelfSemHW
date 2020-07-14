@@ -1,6 +1,6 @@
 package com.valaubr.interfaces;
 
-public interface BinaryTree {
+public interface InterfaceOfBinaryTree {
     /**
      * add new value in node or find collision.
      * @param value

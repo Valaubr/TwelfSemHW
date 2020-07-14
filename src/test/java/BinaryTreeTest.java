@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author valaubr
  */
-class InterfaceOfBinaryTreeTest {
+class BinaryTreeTest {
     /**
      * Test of add method, of class com.valaubr.InterfaceOfBinaryTree.
      */

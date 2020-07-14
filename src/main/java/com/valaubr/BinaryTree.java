@@ -1,29 +1,49 @@
+package com.valaubr;
 
-public class BinaryTree implements Interfaces.BinaryTree {
+import com.valaubr.interfaces.InterfaceOfBinaryTree;
+
+import java.util.Objects;
+
+public class BinaryTree implements InterfaceOfBinaryTree {
 
     private Node root;
 
-    private class Node implements Comparable<Integer> {
-        Integer value;
-        Node left;
-        Node right;
+    private static class Node implements Comparable<Integer> {
+        private Integer value;
+        private Node left;
+        private Node right;
 
-        public Node(Integer value) {
+        private Node(Integer value) {
             this.value = value;
         }
 
         @Override
         public int compareTo(Integer param) {
-            if (value > param) return -1;
-            else if (value < param) return 1;
-            else return 0;
+            return param.compareTo(value);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Node)) return false;
+            Node node = (Node) o;
+            return Objects.equals(hashCode(), node.hashCode());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value);
         }
     }
 
     @Override
     public boolean add(Integer value) {
-        root = add(root, value);
-        return root != null;
+        if (search(value)) { //усложняем добавление до 2log2(n) что вообще то не хорошо
+            return false; // с другой стороны, сообщаем пользователю что такой элемент есть...
+        } else {
+            root = add(root, value);
+            return true;
+        }
     }
 
     private Node add(Node node, Integer value) {
@@ -44,52 +64,39 @@ public class BinaryTree implements Interfaces.BinaryTree {
         return node;
     }
 
-    /**
-     *
-     * @param value
-     * @return
-     */
     @Override
     public boolean delete(Integer value) {
-        try {
-            root = delete(root, value);
+        if (search(value)) {
+            delete(root, value);
             return true;
-        } catch (NullPointerException e) {
+        } else {
             return false;
         }
-
     }
 
     private Node delete(Node node, Integer value) {
         switch (node.compareTo(value)) {
             case 1:
-                node.right = delete(node.right, value);
-                break;
+                return node.right = delete(node.right, value);
             case -1:
-                node.left = delete(node.left, value);
-                break;
+                return node.left = delete(node.left, value);
             default:
-                node = checkSituation(node);
-                break;
+                node = pictureSituation(node);
         }
         return node;
     }
 
-    private Node checkSituation(Node node) {
+    private Node pictureSituation(Node node) {
         //Немного поясню, для себя и для Вас
         //как известно в бинарном дереве поиска можетбыть три случая при удалении:
         //1) Нет детей.
         if (node.right == null && node.left == null) {
             node = null;
-        }
-        //2) есть только один сын.
-        else if (node.left != null && node.right == null) {
+        } else if (node.left != null && node.right == null) { //2) есть только один сын.
             node = node.left;
         } else if (node.left == null && node.right != null) {
             node = node.right;
-        }
-        //3) есть 2 сына.
-        else {
+        } else { //3) есть 2 сына.
             node.value = checkRightNode(node.right).value;
             node.right = delete(node.right, getMin(node.right).value);
         }
@@ -109,16 +116,11 @@ public class BinaryTree implements Interfaces.BinaryTree {
 
     private Node getMin(Node node) {
         if (node.left != null) {
-            node = getMin(node);
+            node = getMin(node.left);
         }
         return node;
     }
 
-    /**
-     *
-     * @param value
-     * @return
-     */
     @Override
     public boolean search(Integer value) {
         return search(root, value);
@@ -139,36 +141,27 @@ public class BinaryTree implements Interfaces.BinaryTree {
         }
     }
 
-    public Integer getFather(Integer value){
-        if (getFather(root, value) != null) {
-            return getFather(root, value).value;
-        } else {
-            return null;
-        }
-    }
-    
-    public Integer getLeftChild(Integer value){
-        if (getLeftChild(root, value) != null){
-            return getLeftChild(root, value).value;
-        } else {
-            return null;
-        }
-    }
-    
-    public Integer getRightChild(Integer value) {
-        if (getRightChild(root, value) != null){
-            return getRightChild(root, value).value;
-        } else {
-            return null;
-        }
+    public Integer getFather(Integer value) {
+        Node father = getFather(root, value);
+        return father != null ? father.value : null;
     }
 
-    private Node getFather(Node node, Integer value){
+    public Integer getLeftChild(Integer value) {
+        Node leftChild = getLeftChild(root, value);
+        return leftChild != null ? leftChild.value : null;
+    }
+
+    public Integer getRightChild(Integer value) {
+        Node rightChild = getRightChild(root, value);
+        return rightChild != null ? rightChild.value : null;
+    }
+
+    private Node getFather(Node node, Integer value) {
         Node returned = null;
         if (root.compareTo(value) == 0 || node == null) {
             return null;
         }
-        
+
         if (node.compareTo(value) > 0 && !node.right.value.equals(value)) {
             returned = getFather(node.right, value);
         } else if (node.compareTo(value) < 0 && !node.left.value.equals(value)) {
@@ -179,8 +172,8 @@ public class BinaryTree implements Interfaces.BinaryTree {
         return returned;
     }
 
-    private Node getLeftChild(Node node, Integer value){
-        Node returned = null;
+    private Node getLeftChild(Node node, Integer value) {
+        Node returned;
         if (node == null) {
             return null;
         }
@@ -198,13 +191,13 @@ public class BinaryTree implements Interfaces.BinaryTree {
         }
         return returned;
     }
-    
-    private Node getRightChild(Node node, Integer value){
-        Node returned = null;
-        if (root.compareTo(value) == 0 || node == null) {
+
+    private Node getRightChild(Node node, Integer value) {
+        Node returned;
+        if (node == null) {
             return null;
         }
-        
+
         switch (node.compareTo(value)) {
             case 1:
                 returned = getRightChild(node.right, value);
