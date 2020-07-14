@@ -1,4 +1,5 @@
 
+import com.valaubr.BinaryTree;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -6,22 +7,22 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author valaubr
  */
-public class BinaryTreeTest {
+class InterfaceOfBinaryTreeTest {
     /**
-     * Test of add method, of class BinaryTree.
+     * Test of add method, of class com.valaubr.InterfaceOfBinaryTree.
      */
     @Test
-    public void testAdd() {
+    void testAdd() {
         System.out.println("add");
         BinaryTree instance = createBinaryTree();
         assertTrue(instance.add(Integer.MIN_VALUE));
     }
 
     /**
-     * Test of delete method, of class BinaryTree.
+     * Test of delete method, of class com.valaubr.InterfaceOfBinaryTree.
      */
     @Test
-    public void testDelete() {
+    void testDelete() {
         System.out.println("delete");
         BinaryTree instance = createBinaryTree();
         instance.add(2);
@@ -36,10 +37,10 @@ public class BinaryTreeTest {
     }
 
     /**
-     * Test of search method, of class BinaryTree.
+     * Test of search method, of class com.valaubr.InterfaceOfBinaryTree.
      */
     @Test
-    public void testSearch() {
+    void testSearch() {
         System.out.println("search");
         BinaryTree instance = createBinaryTree();
         assertTrue(instance.search(6));
@@ -47,10 +48,10 @@ public class BinaryTreeTest {
     }
 
     /**
-     * Test of getFather method, of class BinaryTree.
+     * Test of getFather method, of class com.valaubr.InterfaceOfBinaryTree.
      */
     @Test
-    public void testGetFather() {
+    void testGetFather() {
         System.out.println("getFather");
         BinaryTree instance = createBinaryTree();
         assertEquals(6, instance.getFather(8).intValue());
@@ -58,10 +59,10 @@ public class BinaryTreeTest {
     }
 
     /**
-     * Test of getLeftChild method, of class BinaryTree.
+     * Test of getLeftChild method, of class com.valaubr.InterfaceOfBinaryTree.
      */
     @Test
-    public void testGetLeftChild() {
+    void testGetLeftChild() {
         System.out.println("getLeftChild");
         BinaryTree instance = createBinaryTree();
         assertEquals(4 ,instance.getLeftChild(6).intValue());
@@ -73,10 +74,10 @@ public class BinaryTreeTest {
     }
 
     /**
-     * Test of getRightChild method, of class BinaryTree.
+     * Test of getRightChild method, of class com.valaubr.InterfaceOfBinaryTree.
      */
     @Test
-    public void testGetRightChild() {
+    void testGetRightChild() {
         System.out.println("getRightChild");
         BinaryTree instance = createBinaryTree();
         assertEquals(5 ,instance.getRightChild(4).intValue());
